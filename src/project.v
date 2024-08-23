@@ -59,6 +59,20 @@ module tt_um_quarren42_demoscene_top(
   input  wire       rst_n     // reset_n - low to reset
 );
 
+  localparam h_min_width = 300;
+  localparam h_max_width = 340;
+  localparam v_min_width = 210;
+  localparam v_max_width = 250;
+
+  reg test_h;
+  reg test_v;
+  reg test_g_h;
+  reg test_g_v;
+  reg test_b_h;
+  reg test_b_v;
+  reg [9:0] v_offset;
+  reg v_offset_rev_flag;
+
   // VGA signals
   wire hsync;
   wire vsync;
@@ -88,6 +102,73 @@ module tt_um_quarren42_demoscene_top(
     .hpos(pix_x),
     .vpos(pix_y)
   );
+  
+  always @(posedge clk)
+    begin
+      if (pix_x > (h_min_width-v_offset) && pix_x < (h_max_width+v_offset))
+    test_h <= 1;
+  else
+    test_h <= 0;
+    end
+  
+   always @(posedge clk)
+     begin
+       if (pix_y > (v_min_width-v_offset) && (pix_y) < (v_max_width+v_offset))
+    test_v <= 1;
+  else
+    test_v <= 0;
+     end
+  
+    always @(posedge clk)
+    begin
+      if (pix_x > (h_min_width-v_offset+15) && pix_x < (h_max_width+v_offset-15))
+    test_g_h <= 1;
+  else
+    test_g_h <= 0;
+    end
+  
+   always @(posedge clk)
+     begin
+       if (pix_y > (v_min_width-v_offset/2) && (pix_y) < (v_max_width+v_offset*3))
+    test_g_v <= 1;
+  else
+    test_g_v <= 0;
+     end
+  
+    always @(posedge clk)
+    begin
+      if (pix_x-(v_offset*2) > (h_min_width-v_offset) && pix_x < (h_max_width+v_offset))
+    test_b_h <= 1;
+  else
+    test_b_h <= 0;
+    end
+  
+   always @(posedge clk)
+     begin
+       if ((pix_y-(v_offset*2)) > (v_min_width-v_offset) && (pix_y) < (v_max_width+v_offset))
+    test_b_v <= 1;
+  else
+    test_b_v <= 0;
+     end
+  
+  always @(posedge vsync or negedge rst_n)
+    begin
+      if (~rst_n)
+        begin
+        v_offset <= 0;
+      	v_offset_rev_flag <= 0;
+        end
+      else begin
+        if (v_offset == 0)
+        v_offset_rev_flag <= 1;
+        else if (v_offset == 200)
+        v_offset_rev_flag <= 0;
+        if (v_offset_rev_flag == 1)
+        v_offset <= v_offset + 1;
+      else
+        v_offset <= v_offset - 1;
+      end
+    end
 
   reg [4:0] bitmap_xofs = pix_x[8:4];
   reg [4:0] bitmap_yofs = pix_y[8:4];
@@ -119,9 +200,9 @@ module tt_um_quarren42_demoscene_top(
 
   wire bitmap_gfx = (bitsTemp[bitmap_xofs^ 5'b11111]) && bmpOnH && bmpOnV;
 
-  wire r = video_active && bitmap_gfx;
-  wire g = video_active && bitmap_gfx;
-  wire b = video_active && bitmap_gfx;
+  wire r = (video_active && test_v && test_h) ^ bitmap_gfx;
+  wire g = (video_active && test_g_h && test_g_v) ^ bitmap_gfx;
+  wire b = (video_active && test_b_h && test_b_v) ^ bitmap_gfx;
 
   assign R[0] = b;
   assign R[1] = b;
