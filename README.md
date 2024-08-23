@@ -1,6 +1,13 @@
 ![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg) ![](../../workflows/fpga/badge.svg)
 
-# Tiny Tapeout Verilog Project Template
+# Tiny Tapeout Verilog Project
+
+![image](https://github.com/user-attachments/assets/691e3cad-13da-4c6d-9277-92189fc94104)
+
+This is DEFINITELY not my first project in verilog ever. Not at all. This is the most compact, refined, beautiful set of computer generated images you'll ever see in your life. 
+
+
+(it's riff on the "graphic design is my passion" meme for the uninitiated btw)
 
 - [Read the documentation for project](docs/info.md)
 
@@ -39,3 +46,4 @@ The GitHub action will automatically build the ASIC files using [OpenLane](https
   - LinkedIn [#tinytapeout](https://www.linkedin.com/search/results/content/?keywords=%23tinytapeout) [@TinyTapeout](https://www.linkedin.com/company/100708654/)
   - Mastodon [#tinytapeout](https://chaos.social/tags/tinytapeout) [@matthewvenn](https://chaos.social/@matthewvenn)
   - X (formerly Twitter) [#tinytapeout](https://twitter.com/hashtag/tinytapeout) [@tinytapeout](https://twitter.com/tinytapeout)
+
